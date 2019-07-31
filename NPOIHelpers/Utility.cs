@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SCIta.NPOIHelpers
+namespace NPOI.SCIta.Helpers
 {
   public class RangeResult
   {
