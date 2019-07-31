@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NPOIHelpers")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Array based interface to NPOI")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NPOIHelpers")]
+[assembly: AssemblyCompany("SimCorp Italiana")]
+[assembly: AssemblyProduct("SimCorp Sofia")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
