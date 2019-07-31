@@ -11,47 +11,85 @@ namespace NPOI.SCIta.Helpers
     public static SS.Util.CellRangeAddress GetUsedRangeAddress(this SS.UserModel.ISheet sheet)
     {
       int lastcol = 0, firstcol = int.MaxValue;
-      
+
       for (int n = sheet.FirstRowNum; n <= sheet.LastRowNum; n++) {
         var row = sheet.GetRow(n);
-        lastcol = Math.Max(lastcol, row.LastCellNum);
         firstcol = Math.Min(firstcol, row.FirstCellNum);
+        lastcol = Math.Max(lastcol, row.LastCellNum - 1);
       }
 
       return new SS.Util.CellRangeAddress(sheet.FirstRowNum, sheet.LastRowNum, firstcol, lastcol);
     }
 
-    public static RangeResult GetRange(this SS.UserModel.ISheet sheet,int top=1,int left=1, int rows = int.MaxValue, int cols = int.MaxValue)
+    public static RangeResult GetRange(this SS.UserModel.ISheet sheet)
+    {
+      return GetRange(sheet, 1);
+    }
+
+    public static RangeResult GetRange(this SS.UserModel.ISheet sheet, int top)
+    {
+      return GetRange(sheet, top, 1);
+    }
+
+    public static RangeResult GetRange(this SS.UserModel.ISheet sheet, int top, int left)
+    {
+      return GetRange(sheet, top, left, int.MaxValue);
+    }
+
+    public static RangeResult GetRange(this SS.UserModel.ISheet sheet, int top, int left, int rows)
+    {
+      return GetRange(sheet, top, left, rows, int.MaxValue);
+    }
+
+    public static RangeResult GetRange(this SS.UserModel.ISheet sheet, int top = 1, int left = 1, int rows = int.MaxValue, int cols = int.MaxValue)
     {
       var u = sheet.GetUsedRangeAddress();
-      var (h, w) = u.GetSize();
-      rows = Math.Min(h, rows);
-      cols = Math.Min(w, cols);
-      var wanted = new SS.Util.CellRangeAddress(top - 1, (top - 1) + (rows - 1), left - 1, (left - 1) + (cols - 1));
+
+      int Clamp(int x, int w, int max)
+      {
+        if (w == int.MaxValue)
+          return max;
+        else
+          return (x - 1) + (w - 1);
+      }
+      int bottom = Clamp(top, rows, u.LastRow), 
+        right = Clamp(left, cols, u.LastColumn);
+
+      var wanted = new SS.Util.CellRangeAddress(top - 1, bottom, left - 1, right);
+
       var rng = u.Intersect(wanted);
-      if(rng.NumberOfCells == 0) {
+      if (rng == null) {
         return new RangeResult();
       }
 
-      rng.FirstRow = top - 1;
-      rng.FirstColumn = left - 1;
+      var rrng = u.Intersect(wanted);
+
+      rrng.FirstRow = top - 1;
+      rrng.FirstColumn = left - 1;
+
+      var (rrows, rcols) = rrng.GetSize();
+
+      var r = new object[rrows, rcols];
+      var e = new bool[r.GetLength(0), r.GetLength(1)];
 
       (rows, cols) = rng.GetSize();
 
-      var r = new object[rows, cols];
-      var e = new bool[r.GetLength(0), r.GetLength(1)];
+      int or = rng.FirstRow - rrng.FirstRow, 
+        oc = rng.FirstColumn - rrng.FirstColumn;
 
-      rng = u.Intersect(wanted);
+      for (int n = 0; n < rows; n++) {
+        var rr = n + or;
+        var row = sheet.GetRow(n + rng.FirstRow);
+        for (int c = 0; c < cols; c++) {
+          int x = c + rng.FirstColumn;
+          if (x < row.FirstCellNum)
+            continue;
 
-      for (int n = rng.FirstRow; n <= rng.LastRow; n++) {
-        var rr = n - (rng.FirstRow - (top - 1));
-        var row = sheet.GetRow(n);
-        for(int c = rng.FirstColumn; c <= rng.LastColumn; c++) {
-          var rc = c - (rng.FirstColumn - (left-1));
-          var cell = row.GetCell(c);
-          switch(cell.CellType) {
+          var cell = row.GetCell(x);
+          var rc = c + oc;
+          switch (cell.CellType) {
             case SS.UserModel.CellType.Numeric:
-              r[rr,rc] = cell.NumericCellValue;
+              r[rr, rc] = cell.NumericCellValue;
               break;
             case SS.UserModel.CellType.Boolean:
               r[rr, rc] = cell.BooleanCellValue;

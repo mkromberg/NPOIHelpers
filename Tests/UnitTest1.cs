@@ -50,20 +50,21 @@ namespace Tests
     {
       var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest.xlsx");
       var wh = wb.GetSheetAt(0);
-      int rows = 3;
-      int cols = 4;
-      var r = wh.GetRange(1, 1, rows, cols);
-      Assert.AreEqual(r.Values.GetLength(0), rows);
-      Assert.AreEqual(r.Values.GetLength(1), cols);
+      int rows = 3, cols = 4;
+      int y = 1, x = 1;
+
+      var r = wh.GetRange(y, x, rows, cols);
+      Assert.AreEqual(rows, r.Values.GetLength(0));
+      Assert.AreEqual(cols, r.Values.GetLength(1));
 
       var b = false;
-      foreach(var e in r.Error) {
+      foreach (var e in r.Error) {
         b |= e;
       }
       Assert.IsFalse(b);
 
-      Assert.AreEqual(r.Values[0,0], "Cell: Row-0;CellNo:0");
-      Assert.AreEqual(r.Values[2, 3], "Cell: Row-2;CellNo:3");
+      Assert.AreEqual($"Cell: Row-{y - 1};CellNo:{x - 1}", r.Values[0, 0]);
+      Assert.AreEqual($"Cell: Row-{(y - 1) + (rows - 1)};CellNo:{(x - 1) + (cols - 1)}", r.Values[rows - 1, cols - 1]);
     }
 
     [TestMethod]
@@ -71,11 +72,11 @@ namespace Tests
     {
       var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest.xlsx");
       var wh = wb.GetSheetAt(0);
-      int rows = 3;
-      int cols = 4;
-      var r = wh.GetRange(2, 2, rows, cols);
-      Assert.AreEqual(r.Values.GetLength(0), rows);
-      Assert.AreEqual(r.Values.GetLength(1), cols);
+      int rows = 3, cols = 4;
+      int y = 2, x = 2;
+      var r = wh.GetRange(y, x, rows, cols);
+      Assert.AreEqual(rows, r.Values.GetLength(0));
+      Assert.AreEqual(cols, r.Values.GetLength(1));
 
       var b = false;
       foreach (var e in r.Error) {
@@ -83,11 +84,10 @@ namespace Tests
       }
       Assert.IsFalse(b);
 
-      Assert.AreEqual(r.Values[0, 0], "Cell: Row-1;CellNo:1");
-      Assert.AreEqual(r.Values[2, 3], "Cell: Row-3;CellNo:4");
+      Assert.AreEqual($"Cell: Row-{y - 1};CellNo:{x - 1}", r.Values[0, 0]);
+      Assert.AreEqual($"Cell: Row-{(y - 1) + (rows - 1)};CellNo:{(x - 1) + (cols - 1)}", r.Values[rows - 1, cols - 1]);
     }
 
-    [TestMethod]
     public void TestSheetGet1_53()
     {
       var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest1.xlsx");
@@ -95,8 +95,21 @@ namespace Tests
       int rows = 3;
       int cols = 4;
       var r = wh.GetRange(5, 3, rows, cols);
-      Assert.AreEqual(r.Values.GetLength(0), rows);
-      Assert.AreEqual(r.Values.GetLength(1), cols);
+      Assert.AreEqual(0, r.Values.GetLength(0));
+      Assert.AreEqual(0, r.Values.GetLength(1));
+    }
+
+
+    [TestMethod]
+    public void TestSheetGet1_73()
+    {
+      var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest1.xlsx");
+      var wh = wb.GetSheetAt(0);
+      int rows = 3, cols = 4;
+      int y = 8, x = 3;
+      var r = wh.GetRange(y, x, rows, cols);
+      Assert.AreEqual(rows, r.Values.GetLength(0));
+      Assert.AreEqual(cols, r.Values.GetLength(1));
 
       var b = false;
       foreach (var e in r.Error) {
@@ -104,8 +117,33 @@ namespace Tests
       }
       Assert.IsFalse(b);
 
-      Assert.AreEqual(r.Values[0, 0], "Cell: Row-4;CellNo:2");
-      Assert.AreEqual(r.Values[2, 3], "Cell: Row-6;CellNo:5");
+      Assert.AreEqual(null, r.Values[0, 0]);
+      Assert.AreEqual(null, r.Values[1, 0]);
+      Assert.AreEqual(null, r.Values[1, 1]);
+      Assert.AreEqual($"Cell: Row-{(y - 1) + (rows - 1)};CellNo:{(x - 1) + (cols - 1)}", r.Values[rows - 1, cols - 1]);
     }
+
+    [TestMethod]
+    public void TestSheetGet1_()
+    {
+      var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest1.xlsx");
+      var wh = wb.GetSheetAt(0);
+      var r = wh.GetRange();
+      Assert.AreEqual(10000, r.Values.GetLength(0));
+      Assert.AreEqual(20, r.Values.GetLength(1));
+
+      var b = false;
+      foreach (var e in r.Error) {
+        b |= e;
+      }
+      Assert.IsFalse(b);
+
+      Assert.AreEqual(null, r.Values[0, 0]);
+      Assert.AreEqual(null, r.Values[1, 0]);
+      Assert.AreEqual(null, r.Values[1, 1]);
+      Assert.AreEqual(null, r.Values[22, 4]);
+      Assert.AreEqual($"Cell: Row-9999;CellNo:19", r.Values[9999, 19]);
+    }
+
   }
 }

@@ -20,13 +20,15 @@ namespace NPOI.SCIta.Helpers
 
       var (firstrow, lastrow) = FirstLast(x.FirstRow, x.LastRow, y.FirstRow, y.LastRow);
       var (firstcol, lastcol) = FirstLast(x.FirstColumn, x.LastColumn, y.FirstColumn, y.LastColumn);
+      if(firstrow<=lastrow && firstcol<=lastcol)
+        return new SS.Util.CellRangeAddress(firstrow, lastrow, firstcol, lastcol);
 
-      return new SS.Util.CellRangeAddress(firstrow, lastrow, firstcol, lastcol);
+      return null;
     }
 
     public static (int, int) GetSize(this SS.Util.CellRangeAddress x)
     {
-      return (x.LastRow - x.FirstColumn, x.LastColumn - x.FirstColumn);
+      return (1+x.LastRow - x.FirstRow, 1+x.LastColumn - x.FirstColumn);
     }
 
   }
