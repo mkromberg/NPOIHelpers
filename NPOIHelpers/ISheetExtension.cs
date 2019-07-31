@@ -82,10 +82,13 @@ namespace NPOI.SCIta.Helpers
         var row = sheet.GetRow(n + rng.FirstRow);
         for (int c = 0; c < cols; c++) {
           int x = c + rng.FirstColumn;
-          if (x < row.FirstCellNum)
+          if (x < row.FirstCellNum || x>=row.LastCellNum)
             continue;
 
           var cell = row.GetCell(x);
+          if (cell == null)
+            continue;
+
           var rc = c + oc;
           switch (cell.CellType) {
             case SS.UserModel.CellType.Numeric:
