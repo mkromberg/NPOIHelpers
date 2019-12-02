@@ -14,8 +14,10 @@ namespace NPOI.SCIta.Helpers
 
       for (int n = sheet.FirstRowNum; n <= sheet.LastRowNum; n++) {
         var row = sheet.GetRow(n);
-        firstcol = Math.Min(firstcol, row.FirstCellNum);
-        lastcol = Math.Max(lastcol, row.LastCellNum - 1);
+        if (row != null) {
+          firstcol = Math.Min(firstcol, row.FirstCellNum);
+          lastcol = Math.Max(lastcol, row.LastCellNum - 1);
+        }
       }
 
       return new SS.Util.CellRangeAddress(sheet.FirstRowNum, sheet.LastRowNum, firstcol, lastcol);
@@ -80,6 +82,9 @@ namespace NPOI.SCIta.Helpers
       for (int n = 0; n < rows; n++) {
         var rr = n + or;
         var row = sheet.GetRow(n + rng.FirstRow);
+        if (row == null)
+          continue;
+
         for (int c = 0; c < cols; c++) {
           int x = c + rng.FirstColumn;
           if (x < row.FirstCellNum || x>=row.LastCellNum)
