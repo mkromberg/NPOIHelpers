@@ -1,0 +1,33 @@
+ res←file Get y;R_;scalar;o;sheets
+⍝ file can be either a name or an IWorkbook object (returned by Open)
+⍝ sheets o←y #.PLUS.unopt{EmptyOnError←0 ⋄ EmptyOnNull←0 ⋄ EmptyToChars←0 ⋄ ScalarToVector←0 ⋄ EvaluateFormulas←0}#.uc'n'
+sheets←y
+o←(EmptyOnError:0 ⋄ EmptyOnNull:0 ⋄ EmptyToChars:0 ⋄ ScalarToVector:0 ⋄ EvaluateFormulas:0)
+
+⍝ sheets is an array of sheet definitions
+⍝    or a single (non-nested) sheet definition
+⍝    or a single sheet name
+⍝    or a list of sheet names
+⍝ a sheet definition is
+⍝ [1] name [2] first row, origin 1 (default 1) [3] first column, origin 1 (default 1) [4] max rows (default: all available) [5] max cols (default: all available)
+
+⍝ R_←{1:_←⎕WA}#.uDefer ⍬
+
+ :If #.IsChar sheets
+ :OrIf (≡sheets)∊1 ¯2
+     sheets←⊂sheets
+     scalar←1
+ :Else
+     scalar←⊃0=⍴⍴sheets
+ :EndIf
+
+ sheets←{
+     ⊂⍣(#.IsChar ⍵)⊢⍵
+ }¨sheets
+
+ res←file(o Get_)sheets
+ res←''(⍴⍣(scalar∧1≡≢res))res
+
+ R_.DO ⍝ Force GC to close the file.
+ ⍝ I tried all sort of :Disposable but they only slow down the procedure while doing nothing for this resource leak
+⍝∘ (c)APLIT D NPO stf 09/01/2020 17:35                 4667 D95

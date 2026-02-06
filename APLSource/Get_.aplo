@@ -1,0 +1,55 @@
+ res←file(opts Get_)sheets;wb;sh;n;row;c;cell;z;r;sheet;a;range;s;allsheets;defsheet;i;_NET
+ ⍝ sheets: [1] name {[2] first row [3] first column (origin 1) [4] max rows [5] max cols}
+ ⍝ name can contain wildcards
+ ⍝ empty name means: last active sheet
+
+ _NET←Init''
+
+ res←⍬
+
+ ⍝NPOI.SS.UserModel.(WorkbookFactory.SetImportOption ImportOption.SheetContentOnly)
+ :If #.IsChar file
+     wb←_NET.NPOI.SS.UserModel.WorkbookFactory.Create⊂file
+ :Else
+     wb←file
+ :EndIf
+
+ :Disposable wb
+
+     allsheets←SheetNames wb
+     defsheet←wb.(GetSheetAt ActiveSheetIndex).SheetName
+
+     :For sh :In ⊆sheets
+         ⍝ /// s range←1((,⊃){⍺ ⍵}↓)'' 1 1 ⎕NULL ⎕NULL #.uDefault sh
+         s←⊃sh ⋄ range←''
+         :If '?*'(1∊∊)s
+             i←s uFILTER allsheets
+             s←allsheets[i]
+         :ElseIf 0∊⍴⊃s
+             s←defsheet
+         :EndIf
+         :If opts.EvaluateFormulas
+             :Trap 90
+                 _NET.NPOI.XSSF.UserModel.XSSFFormulaEvaluator.EvaluateAllFormulaCells wb
+             :Else
+                 ⎕←'⍝ Trapped error during formula refresh: '⎕DMX
+             :EndTrap
+         :EndIf
+
+         :For sheet :In ⊆s
+             :Disposable sh←wb.GetSheet⊂sheet
+                 z←_NET.NPOI.SCIta.Helpers.ISheetExtension.GetRange sh,range~⎕NULL
+                 r←(⊂ERROR ⍬⊃⍨1+opts.EmptyOnError)@{z.Error}⊢z.Values
+                 r←#.NoQNULL⍣opts.EmptyOnNull⊢r
+                 :If opts.ScalarToVector
+                     r←,¨@(0=≢∘⍴¨)⊢r
+                 :EndIf
+                 :If opts.EmptyToChars
+                     r←(⊂'')@(0=≢¨)⊢r
+                 :EndIf
+                 res,←⊂r
+             :EndDisposable
+         :EndFor
+     :EndFor
+ :EndDisposable
+⍝∘ (c)APLIT D NPO stf 20/02/2020 17:54                  137 D95

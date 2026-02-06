@@ -1,0 +1,8 @@
+﻿ allsheets←SheetNames wb
+
+ :If wb.NumberOfSheets>0
+     allsheets←(wb.GetSheetAt¨¯1+⍳wb.NumberOfSheets).SheetName
+ :Else
+     allsheets←0⍴⊂''
+ :EndIf
+⍝∘ (c)APLIT D NPO stf 01/08/2019 10:39                11112 D95

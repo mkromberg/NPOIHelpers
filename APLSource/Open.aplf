@@ -1,0 +1,4 @@
+ wb←Open file;_NET
+ _NET←Init''
+ wb←_NET.NPOI.SS.UserModel.WorkbookFactory.Create⊂file
+⍝∘ (c)APLIT D NPO stf 20/02/2020 17:54                24511 D95
