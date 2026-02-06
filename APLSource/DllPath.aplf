@@ -1,0 +1,8 @@
+ dll←DllPath name;dll;extra;path
+
+ path←PATH,'/NPOIHelpers/bin/Debug/'
+ :If 0∊⍴name
+     dll←path,'NPOI.dll'
+ :Else
+     dll←path,name,'.dll'
+ :EndIf

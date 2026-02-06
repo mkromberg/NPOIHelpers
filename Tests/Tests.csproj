@@ -46,6 +46,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <Compile Include="UnitTest1.cs" />
+    <Compile Include="PutRangeTests.cs" />
     <Compile Include="TestDataGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

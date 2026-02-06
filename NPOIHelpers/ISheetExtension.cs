@@ -132,5 +132,46 @@ namespace NPOI.SCIta.Helpers
         Values = r
       };
     }
+
+    public static void PutRange(this SS.UserModel.ISheet sheet, object[,] values, int top = 1, int left = 1)
+    {
+      int rows = values.GetLength(0);
+      int cols = values.GetLength(1);
+
+      for (int r = 0; r < rows; r++)
+      {
+        int rowIndex = (top - 1) + r;
+        var row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+
+        for (int c = 0; c < cols; c++)
+        {
+          int colIndex = (left - 1) + c;
+          var cell = row.GetCell(colIndex) ?? row.CreateCell(colIndex);
+          var value = values[r, c];
+
+          switch (value)
+          {
+            case null:
+              cell.SetBlank();
+              break;
+            case string s:
+              cell.SetCellValue(s);
+              break;
+            case bool b:
+              cell.SetCellValue(b);
+              break;
+            case DateTime dt:
+              cell.SetCellValue(dt);
+              break;
+            case double d:
+              cell.SetCellValue(d);
+              break;
+            default:
+              cell.SetCellValue(Convert.ToDouble(value));
+              break;
+          }
+        }
+      }
+    }
   }
 }

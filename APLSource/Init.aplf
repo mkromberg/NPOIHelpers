@@ -1,0 +1,6 @@
+_NET←Init dummy
+:If 0=⎕NC 'PATH'
+    PATH←{¯1↓1⊃⎕NPARTS ⍵}⍣2⊢4⊃5179⌶⊃⎕SI ⍝ Parent of where this function was loaded from?
+    PATH[⍸PATH='/']←'\'
+:EndIf
+(_NET←⎕NS'').⎕USING←(⊂''),(',',DllPath)¨'NPOI' 'NPOI.OOXML' 'NPOI.SCIta.Helpers' ⍝ 'System.Memory'

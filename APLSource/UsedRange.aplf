@@ -1,0 +1,3 @@
+ range←UsedRange sheet;_NET
+ _NET←Init''
+ range←_NET.NPOI.SCIta.Helpers.ISheetExtension.GetUsedRangeAddress sheet
