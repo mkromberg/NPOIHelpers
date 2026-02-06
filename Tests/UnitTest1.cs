@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NPOI.SS.UserModel;
 using NPOI.SCIta.Helpers;
@@ -9,11 +9,16 @@ namespace Tests
   [TestClass]
   public class UnitTest1
   {
+    [ClassInitialize]
+    public static void ClassInit(TestContext context)
+    {
+      TestDataGenerator.EnsureTestDataExists();
+    }
 
     [TestMethod]
     public void TestGetUsedRangeAddress()
     {
-      var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest.xlsx");
+      var wb = WorkbookFactory.Create(TestDataGenerator.BigTestPath);
       var wh = wb.GetSheetAt(0);
       var u = wh.GetUsedRangeAddress();
       Assert.AreEqual(0, u.FirstRow);
@@ -48,7 +53,7 @@ namespace Tests
     [TestMethod]
     public void TestSheetGet11()
     {
-      var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest.xlsx");
+      var wb = WorkbookFactory.Create(TestDataGenerator.BigTestPath);
       var wh = wb.GetSheetAt(0);
       int rows = 3, cols = 4;
       int y = 1, x = 1;
@@ -70,7 +75,7 @@ namespace Tests
     [TestMethod]
     public void TestSheetGet22()
     {
-      var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest.xlsx");
+      var wb = WorkbookFactory.Create(TestDataGenerator.BigTestPath);
       var wh = wb.GetSheetAt(0);
       int rows = 3, cols = 4;
       int y = 2, x = 2;
@@ -90,7 +95,7 @@ namespace Tests
 
     public void TestSheetGet1_53()
     {
-      var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest1.xlsx");
+      var wb = WorkbookFactory.Create(TestDataGenerator.BigTest1Path);
       var wh = wb.GetSheetAt(0);
       int rows = 3;
       int cols = 4;
@@ -103,7 +108,7 @@ namespace Tests
     [TestMethod]
     public void TestSheetGet1_73()
     {
-      var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest1.xlsx");
+      var wb = WorkbookFactory.Create(TestDataGenerator.BigTest1Path);
       var wh = wb.GetSheetAt(0);
       int rows = 3, cols = 4;
       int y = 8, x = 3;
@@ -126,7 +131,7 @@ namespace Tests
     [TestMethod]
     public void TestSheetGet1_()
     {
-      var wb = WorkbookFactory.Create(@"k:\users\stefano\bigtest1.xlsx");
+      var wb = WorkbookFactory.Create(TestDataGenerator.BigTest1Path);
       var wh = wb.GetSheetAt(0);
       var r = wh.GetRange();
       Assert.AreEqual(10000, r.Values.GetLength(0));
