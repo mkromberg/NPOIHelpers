@@ -9,6 +9,12 @@ namespace Tests
   [TestClass]
   public class PutRangeTests
   {
+    [ClassInitialize]
+    public static void ClassInit(TestContext context)
+    {
+      ISheetExtension.InitEncodings();
+    }
+
     [TestMethod]
     public void TestPutRangeRoundTrip()
     {

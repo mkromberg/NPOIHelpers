@@ -12,6 +12,7 @@ namespace Tests
     [ClassInitialize]
     public static void ClassInit(TestContext context)
     {
+      ISheetExtension.InitEncodings();
       TestDataGenerator.EnsureTestDataExists();
     }
 

@@ -4,3 +4,4 @@ _NET←Init dummy
     PATH[⍸PATH='/']←'\'
 :EndIf
 (_NET←⎕NS'').⎕USING←(⊂''),(',',DllPath)¨'NPOI' 'NPOI.OOXML' 'NPOI.SCIta.Helpers' ⍝ 'System.Memory'
+_NET.NPOI.SCIta.Helpers.ISheetExtension.InitEncodings
