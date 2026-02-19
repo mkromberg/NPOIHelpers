@@ -8,6 +8,11 @@ namespace NPOI.SCIta.Helpers
 {
   public static class ISheetExtension
   {
+    public static void InitEncodings()
+    {
+      System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+    }
+
     public static SS.Util.CellRangeAddress GetUsedRangeAddress(this SS.UserModel.ISheet sheet)
     {
       int lastcol = 0, firstcol = int.MaxValue;
