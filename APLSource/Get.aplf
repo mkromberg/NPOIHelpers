@@ -28,6 +28,8 @@ o←(EmptyOnError:0 ⋄ EmptyOnNull:0 ⋄ EmptyToChars:0 ⋄ ScalarToVector:0 �
  res←file(o Get_)sheets
  res←''(⍴⍣(scalar∧1≡≢res))res
 
- R_.DO ⍝ Force GC to close the file.
+ :If 0≠⎕NC 'R_.DO'
+     R_.DO ⍝ Force GC to close the file.
+ :EndIf
  ⍝ I tried all sort of :Disposable but they only slow down the procedure while doing nothing for this resource leak
 ⍝∘ (c)APLIT D NPO stf 09/01/2020 17:35                 4667 D95

@@ -39,8 +39,13 @@
          :For sheet :In ⊆s
              :Disposable sh←wb.GetSheet⊂sheet
                  z←_NET.NPOI.SCIta.Helpers.ISheetExtension.GetRange sh,range~⎕NULL
-                 r←(⊂ERROR ⍬⊃⍨1+opts.EmptyOnError)@{z.Error}⊢z.Values
-                 r←#.NoQNULL⍣opts.EmptyOnNull⊢r
+                 r←z.Values
+                 :If opts.EmptyOnError
+                     r←(⊂ERROR ⍬⊃⍨1+opts.EmptyOnError)@{z.Error}⊢r
+                 :End
+                 :If opts.EmptyOnNull
+                     r←#.NoQNULL r
+                 :EndIf
                  :If opts.ScalarToVector
                      r←,¨@(0=≢∘⍴¨)⊢r
                  :EndIf
