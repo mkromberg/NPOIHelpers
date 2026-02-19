@@ -1,0 +1,11 @@
+ wb←New format;_NET
+ _NET←Init ''
+
+ :Select ⎕C format~'.'
+ :Case 'xlsx'
+      wb←⎕NEW _NET.NPOI.XSSF.UserModel.XSSFWorkbook
+ :Case 'xls'
+      wb←⎕NEW _NET.NPOI.HSSF.UserModel.HSSFWorkbook
+ :Else
+      ('Unsupported extension: ',ext) ⎕SIGNAL 11
+ :EndSelect
