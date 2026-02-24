@@ -1,6 +1,8 @@
- dll←DllPath name;dll;extra;path
+ dll←DllPath name;dll;extra;path;prefix
 
- path←PATH,'/NPOIHelpers/bin/Debug/'
+ prefix←('npoi' 'gembox'⍳⊂⎕C HELPERLIB)⊃'NPOI' 'GemBox'
+ path←PATH,'/',prefix,'Helpers/bin/Debug/'
+
  :If 0∊⍴name
      dll←path,'NPOI.dll'
  :Else

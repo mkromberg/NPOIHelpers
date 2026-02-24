@@ -1,4 +1,4 @@
-﻿namespace ArrayEWE.Helpers
+namespace ArrayEWE.Helpers
 {
   public class RangeResult
   {

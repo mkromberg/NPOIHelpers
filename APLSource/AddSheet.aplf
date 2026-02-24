@@ -1,0 +1,3 @@
+sheet←AddSheet (wb name);_NET
+_NET←Init HELPERLIB
+sheet←_NET.ArrayEWE.Helpers.WorksheetExtension.AddSheet wb name

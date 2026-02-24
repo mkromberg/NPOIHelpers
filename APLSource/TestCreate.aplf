@@ -1,0 +1,36 @@
+ time←TestCreate;wb;sheet;data;t;ai3;start;filename;sheetname
+
+ HELPERLIB←⎕C ¯7↓2⊃⎕NPARTS{¯1↓⊃⎕NPARTS ⍵}⍣2⊢(4075⌶⍬).Process.InitialDirectory
+ ⎕←'Testing with helper library ',HELPERLIB
+ data←{'row ',(⍕⍵[1]),' col ',(⍕⍵[2])}¨⍳10000 15
+ filename←'c:\tmp\test.xlsx'
+
+ start←ai3←⎕AI[3]
+ time←0 2⍴⊂''
+
+ :For sheetname :In 'Sheet 1' 'Sheet 2'
+     :If sheetname≡'Sheet 1'
+         wb←New'xlsx'
+         ai3←⎕AI[3]⊣time⍪←'Create workbook'(⎕AI[3]-ai3)
+     :Else
+         wb←Open'c:\tmp\test.xlsx'
+         ai3←⎕AI[3]⊣time⍪←'Reopen workbook'(⎕AI[3]-ai3)
+     :EndIf
+
+     sheet←AddSheet wb sheetname
+     ai3←⎕AI[3]⊣time⍪←('Add ',sheetname)(⎕AI[3]-ai3)
+
+     PutRange sheet data(1 1)
+     ai3←⎕AI[3]⊣time⍪←('Put to ',sheetname)(⎕AI[3]-ai3)
+
+     filename Save wb
+     ai3←⎕AI[3]⊣time⍪←'Save wb'(⎕AI[3]-ai3)
+
+     sheet←⊃wb Get sheetname
+     :If data≢sheet
+         ⎕←'Test failed for ',HELPERLIB
+         ∘∘∘
+     :EndIf
+     ai3←⎕AI[3]⊣time⍪←('Read ',sheetname)(⎕AI[3]-ai3)
+ :EndFor
+ time⍪←'Total time' (⎕AI[3]-start)

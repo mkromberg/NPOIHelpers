@@ -1,4 +1,4 @@
 PutRange args;sheet;data;topleft;_NET
 (sheet data topleft)←3↑args,⊂1 1
-_NET←Init ''
-_NET.NPOI.SCIta.Helpers.ISheetExtension.PutRange sheet data,topleft
+_NET←Init HELPERLIB
+_NET.ArrayEWE.Helpers.WorksheetExtension.PutRange sheet data,topleft

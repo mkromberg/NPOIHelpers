@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SS = NPOI.SS;
 
-namespace NPOI.SCIta.Helpers
+namespace ArrayEWE.Helpers
 {
-  public static class ISheetExtension
+  public static class WorksheetExtension
   {
-    public static void InitEncodings()
+    public static void Initialize()
     {
       System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
     }
@@ -136,6 +133,24 @@ namespace NPOI.SCIta.Helpers
         Error = e,
         Values = r
       };
+    }
+
+    public static string[] AllSheets(SS.UserModel.IWorkbook wb)
+    {
+      var names = new string[wb.NumberOfSheets];
+      for (int i = 0; i < wb.NumberOfSheets; i++)
+        names[i] = wb.GetSheetName(i);
+      return names;
+    }
+
+    public static SS.UserModel.ISheet AddSheet(SS.UserModel.IWorkbook wb, string name)
+    {
+      return wb.CreateSheet(name);
+    }
+
+    public static SS.UserModel.ISheet GetSheet(SS.UserModel.IWorkbook wb, string name)
+    {
+      return wb.GetSheet(name);
     }
 
     public static void PutRange(this SS.UserModel.ISheet sheet, object[,] values, int top = 1, int left = 1)

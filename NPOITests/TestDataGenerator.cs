@@ -24,6 +24,23 @@ namespace Tests
         CreateBigTest1();
     }
 
+    public static (long bigTestMs, long bigTest1Ms) BenchmarkCreation()
+    {
+      File.Delete(BigTestPath);
+      File.Delete(BigTest1Path);
+      Directory.CreateDirectory(TestDataPath);
+
+      var sw = System.Diagnostics.Stopwatch.StartNew();
+      CreateBigTest();
+      long bigTestMs = sw.ElapsedMilliseconds;
+
+      sw.Restart();
+      CreateBigTest1();
+      long bigTest1Ms = sw.ElapsedMilliseconds;
+
+      return (bigTestMs, bigTest1Ms);
+    }
+
     private static void CreateBigTest()
     {
       var wb = new XSSFWorkbook();

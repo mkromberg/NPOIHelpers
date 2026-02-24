@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPOIHelpers", "NPOIHelpers\NPOIHelpers.csproj", "{A92E96F1-0006-4652-84F0-53179E110B78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3C695CBB-53D4-41ED-81D5-CF8A69F1CE88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPOITests", "NPOITests\NPOITests.csproj", "{3C695CBB-53D4-41ED-81D5-CF8A69F1CE88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GemBoxHelpers", "GemBoxHelpers\GemBoxHelpers.csproj", "{D4E6E7DA-2F96-4FCA-AD58-745408F3128A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GemBoxTests", "GemBoxTests\GemBoxTests.csproj", "{A2205A68-9432-4197-BBB5-CE659B9072DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{3C695CBB-53D4-41ED-81D5-CF8A69F1CE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C695CBB-53D4-41ED-81D5-CF8A69F1CE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C695CBB-53D4-41ED-81D5-CF8A69F1CE88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4E6E7DA-2F96-4FCA-AD58-745408F3128A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E6E7DA-2F96-4FCA-AD58-745408F3128A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4E6E7DA-2F96-4FCA-AD58-745408F3128A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E6E7DA-2F96-4FCA-AD58-745408F3128A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2205A68-9432-4197-BBB5-CE659B9072DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2205A68-9432-4197-BBB5-CE659B9072DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2205A68-9432-4197-BBB5-CE659B9072DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2205A68-9432-4197-BBB5-CE659B9072DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
