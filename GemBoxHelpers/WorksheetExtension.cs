@@ -7,7 +7,8 @@ namespace SCIta.GemBoxHelpers
   {
     public static void InitEncodings()
     {
-      SpreadsheetInfo.SetLicense("SN-2026Feb20-2026Mar20-6WqF1/ThTHePFHnbEcRLejQarE0Uz2FWgFNO2SHqo7axLPUcdQCqeZ3nHiCg5ziNGosbyhrSY5r0ucceBmdMjqxShUw==B");
+      var key = Environment.GetEnvironmentVariable("GEMBOX_LICENSE_KEY") ?? "FREE-LIMITED-KEY";
+      SpreadsheetInfo.SetLicense(key);
     }
 
     public static CellRange GetUsedCellRange(ExcelWorksheet worksheet)
