@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NPOI.SCIta.Helpers
 {
-  public static class ISheetExtension
+  public static class WorksheetExtension
   {
     public static void InitEncodings()
     {
