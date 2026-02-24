@@ -2,7 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using NPOI.SCIta.Helpers;
+using ArrayEWE.Helpers;
 using System.Linq;
 
 namespace Tests
@@ -286,6 +286,41 @@ namespace Tests
       Assert.AreEqual(3.0, result.Values[0, 2]);
       Assert.AreEqual(4.0, result.Values[0, 3]);
       Assert.AreEqual(5.5, (double)result.Values[0, 4], 0.01);
+    }
+
+    [TestMethod]
+    public void TestAllSheets()
+    {
+      var wb = new XSSFWorkbook();
+      wb.CreateSheet("Alpha");
+      wb.CreateSheet("Beta");
+      wb.CreateSheet("Gamma");
+      var names = WorksheetExtension.AllSheets(wb);
+      Assert.AreEqual(3, names.Length);
+      Assert.AreEqual("Alpha", names[0]);
+      Assert.AreEqual("Beta", names[1]);
+      Assert.AreEqual("Gamma", names[2]);
+    }
+
+    [TestMethod]
+    public void TestAddSheet()
+    {
+      var wb = new XSSFWorkbook();
+      var sheet = WorksheetExtension.AddSheet(wb, "NewSheet");
+      Assert.IsNotNull(sheet);
+      Assert.AreEqual("NewSheet", sheet.SheetName);
+      Assert.AreEqual(1, wb.NumberOfSheets);
+    }
+
+    [TestMethod]
+    public void TestGetSheet()
+    {
+      var wb = new XSSFWorkbook();
+      wb.CreateSheet("Alpha");
+      wb.CreateSheet("Beta");
+      var sheet = WorksheetExtension.GetSheet(wb, "Beta");
+      Assert.IsNotNull(sheet);
+      Assert.AreEqual("Beta", sheet.SheetName);
     }
 
   }

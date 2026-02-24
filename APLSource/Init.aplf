@@ -1,7 +1,17 @@
-_NET←Init dummy
+_NET←Init mode;use
 :If 0=⎕NC 'PATH'
     PATH←{¯1↓1⊃⎕NPARTS ⍵}⍣2⊢4⊃5179⌶⊃⎕SI ⍝ Parent of where this function was loaded from?
     PATH[⍸PATH='/']←'\'
 :EndIf
-(_NET←⎕NS'').⎕USING←(⊂''),(',',DllPath)¨'NPOI.Core' 'NPOI.OOXML' 'NPOI.SCIta.Helpers'
-_NET.NPOI.SCIta.Helpers.ISheetExtension.InitEncodings
+
+:Select ⎕C mode
+:Case 'npoi'
+    use←(⊂''),(',',DllPath)¨'NPOI.Core' 'NPOI.OOXML' 'ArrayEWE.Helpers'
+:Case 'gembox'
+    use←(⊂''),(',',DllPath)¨'GemBox.Spreadsheet' 'ArrayEWE.Helpers'
+:Else
+    'Supported are NPOI and GemBox' ⎕SIGNAL 11
+:EndSelect
+
+(_NET←⎕NS'').⎕USING←use
+_NET.ArrayEWE.Helpers.WorksheetExtension.Initialize

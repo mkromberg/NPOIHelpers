@@ -1,5 +1,10 @@
  filename Save wb;_NET;path;name;ext;fs
- _NET←Init''
- fs←⎕NEW _NET.System.IO.FileStream(filename _NET.System.IO.FileMode.Create)
- wb.Write fs
- fs.Close
+ _NET←Init HELPERLIB
+ :Select ⎕C HELPERLIB
+ :Case 'npoi'
+     fs←⎕NEW _NET.System.IO.FileStream(filename _NET.System.IO.FileMode.Create)
+     wb.Write fs 1
+     fs.Close
+ :Case 'gembox'
+     wb.Save ⊂filename
+ :EndSelect

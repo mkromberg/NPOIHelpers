@@ -1,4 +1,9 @@
  wb←Open file;_NET
- _NET←Init''
- wb←_NET.NPOI.SS.UserModel.WorkbookFactory.Create⊂file
+ _NET←Init HELPERLIB
+:Select ⎕C HELPERLIB
+:Case 'npoi'
+     wb←_NET.NPOI.SS.UserModel.WorkbookFactory.Create⊂file
+:Case 'gembox'
+     wb←_NET.GemBox.Spreadsheet.ExcelFile.Load ⊂file
+:EndSelect
 ⍝∘ (c)APLIT D NPO stf 20/02/2020 17:54                24511 D95

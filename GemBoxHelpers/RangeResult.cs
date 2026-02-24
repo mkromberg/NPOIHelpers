@@ -1,4 +1,4 @@
-namespace SCIta.GemBoxHelpers
+namespace ArrayEWE.Helpers
 {
   public class RangeResult
   {

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GemBox.Spreadsheet;
-using SCIta.GemBoxHelpers;
+using ArrayEWE.Helpers;
 using System.Linq;
 
 namespace GemBoxTests
@@ -286,6 +286,41 @@ namespace GemBoxTests
       Assert.AreEqual(3.0, result.Values[0, 2]);
       Assert.AreEqual(4.0, result.Values[0, 3]);
       Assert.AreEqual(5.5, (double)result.Values[0, 4], 0.01);
+    }
+
+    [TestMethod]
+    public void TestAllSheets()
+    {
+      var ef = new ExcelFile();
+      ef.Worksheets.Add("Alpha");
+      ef.Worksheets.Add("Beta");
+      ef.Worksheets.Add("Gamma");
+      var names = WorksheetExtension.AllSheets(ef);
+      Assert.AreEqual(3, names.Length);
+      Assert.AreEqual("Alpha", names[0]);
+      Assert.AreEqual("Beta", names[1]);
+      Assert.AreEqual("Gamma", names[2]);
+    }
+
+    [TestMethod]
+    public void TestAddSheet()
+    {
+      var ef = new ExcelFile();
+      var ws = WorksheetExtension.AddSheet(ef, "NewSheet");
+      Assert.IsNotNull(ws);
+      Assert.AreEqual("NewSheet", ws.Name);
+      Assert.AreEqual(1, ef.Worksheets.Count);
+    }
+
+    [TestMethod]
+    public void TestGetSheet()
+    {
+      var ef = new ExcelFile();
+      ef.Worksheets.Add("Alpha");
+      ef.Worksheets.Add("Beta");
+      var ws = WorksheetExtension.GetSheet(ef, "Beta");
+      Assert.IsNotNull(ws);
+      Assert.AreEqual("Beta", ws.Name);
     }
 
   }

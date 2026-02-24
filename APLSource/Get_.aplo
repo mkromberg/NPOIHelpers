@@ -3,7 +3,7 @@
  ⍝ name can contain wildcards
  ⍝ empty name means: last active sheet
 
- _NET←Init''
+ _NET←Init HELPERLIB
 
  res←⍬
 
@@ -16,8 +16,8 @@
 
  :Disposable wb
 
-     allsheets←SheetNames wb
-     defsheet←wb.(GetSheetAt ActiveSheetIndex).SheetName
+     allsheets←_NET.ArrayEWE.Helpers.WorksheetExtension.AllSheets wb
+     defsheet←⊃allsheets
 
      :For sh :In ⊆sheets
          ⍝ /// s range←1((,⊃){⍺ ⍵}↓)'' 1 1 ⎕NULL ⎕NULL #.uDefault sh
@@ -37,8 +37,10 @@
          :EndIf
 
          :For sheet :In ⊆s
-             :Disposable sh←wb.GetSheet⊂sheet
-                 z←_NET.NPOI.SCIta.Helpers.ISheetExtension.GetRange sh,range~⎕NULL
+
+             sh←_NET.ArrayEWE.Helpers.WorksheetExtension.GetSheet wb sheet
+             :Disposable sh
+                 z←_NET.ArrayEWE.Helpers.WorksheetExtension.GetRange sh,range~⎕NULL
                  r←z.Values
                  :If opts.EmptyOnError
                      r←(⊂ERROR ⍬⊃⍨1+opts.EmptyOnError)@{z.Error}⊢r

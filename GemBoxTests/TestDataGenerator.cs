@@ -1,5 +1,5 @@
 using GemBox.Spreadsheet;
-using SCIta.GemBoxHelpers;
+using ArrayEWE.Helpers;
 using System.IO;
 
 namespace GemBoxTests
@@ -15,7 +15,7 @@ namespace GemBoxTests
 
     public static void EnsureTestDataExists()
     {
-      WorksheetExtension.InitEncodings();
+      WorksheetExtension.Initialize();
       Directory.CreateDirectory(TestDataPath);
 
       if (!File.Exists(BigTestPath))
@@ -27,7 +27,7 @@ namespace GemBoxTests
 
     public static (long bigTestMs, long bigTest1Ms) BenchmarkCreation()
     {
-      WorksheetExtension.InitEncodings();
+      WorksheetExtension.Initialize();
       File.Delete(BigTestPath);
       File.Delete(BigTest1Path);
       Directory.CreateDirectory(TestDataPath);

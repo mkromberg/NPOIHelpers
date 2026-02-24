@@ -1,7 +1,7 @@
 using System;
 using GemBox.Spreadsheet;
 
-namespace SCIta.GemBoxHelpers
+namespace ArrayEWE.Helpers
 {
   public static class CellRangeExtension
   {

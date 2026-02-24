@@ -7,8 +7,8 @@
     <ProjectGuid>{D4E6E7DA-2F96-4FCA-AD58-745408F3128A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SCIta.GemBoxHelpers</RootNamespace>
-    <AssemblyName>GemBox.SCIta.Helpers</AssemblyName>
+    <RootNamespace>ArrayEWE.Helpers</RootNamespace>
+    <AssemblyName>ArrayEWE.Helpers</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -45,7 +45,7 @@
     <Compile Include="CellRangeExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RangeResult.cs" />
-    <Compile Include="WorksheetExtension.cs" />
+    <Compile Include="Helpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitVersionTask">

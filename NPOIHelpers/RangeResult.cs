@@ -1,4 +1,4 @@
-﻿namespace NPOI.SCIta.Helpers
+﻿namespace ArrayEWE.Helpers
 {
   public class RangeResult
   {

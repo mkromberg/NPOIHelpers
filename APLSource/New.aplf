@@ -1,11 +1,17 @@
- wb←New format;_NET
- _NET←Init ''
+ wb←New format;_NET;key
+ _NET←Init HELPERLIB
 
- :Select ⎕C format~'.'
- :Case 'xlsx'
+ :Select ⎕C HELPERLIB (format~'.')
+ :Case 'npoi' 'xlsx'
       wb←⎕NEW _NET.NPOI.XSSF.UserModel.XSSFWorkbook
- :Case 'xls'
+ :Case 'npoi' 'xls'
       wb←⎕NEW _NET.NPOI.HSSF.UserModel.HSSFWorkbook
+ :CaseList ('gembox' 'xlsx')('gembox' 'xls')
+      ⍝ key←2 ⎕NQ '.' 'GetEnvironment' 'GEMBOX_LICENSE_KEY'
+      ⍝ _NET.GemBox.Spreadsheet.SpreadsheetInfo.SetLicense ⊂key
+      wb←⎕NEW _NET.GemBox.Spreadsheet.ExcelFile
+ :Case 'gembox' 'xls'
+      ... ⍝ wb←⎕NEW _NET.NPOI.HSSF.UserModel.HSSFWorkbook
  :Else
-      ('Unsupported extension: ',ext) ⎕SIGNAL 11
+      ('Unsupported extension: ',format) ⎕SIGNAL 11
  :EndSelect

@@ -1,14 +1,19 @@
 using System;
 using GemBox.Spreadsheet;
 
-namespace SCIta.GemBoxHelpers
+namespace ArrayEWE.Helpers
 {
   public static class WorksheetExtension
   {
-    public static void InitEncodings()
+    public static void Initialize()
     {
-      var key = Environment.GetEnvironmentVariable("GEMBOX_LICENSE_KEY") ?? "FREE-LIMITED-KEY";
+      var key = GetEnvironmentVariable("GEMBOX_LICENCE_KEY") ?? GetEnvironmentVariable("GEMBOX_LICENSE_KEY") ?? "FREE-LIMITED-KEY";
       SpreadsheetInfo.SetLicense(key);
+    }
+
+    public static string GetEnvironmentVariable(string name)
+    {
+      return Environment.GetEnvironmentVariable(name);
     }
 
     public static CellRange GetUsedCellRange(ExcelWorksheet worksheet)
@@ -91,6 +96,24 @@ namespace SCIta.GemBoxHelpers
       }
 
       return new RangeResult { Values = r, Error = e };
+    }
+
+    public static string[] AllSheets(ExcelFile ef)
+    {
+      var names = new string[ef.Worksheets.Count];
+      for (int i = 0; i < ef.Worksheets.Count; i++)
+        names[i] = ef.Worksheets[i].Name;
+      return names;
+    }
+
+    public static ExcelWorksheet AddSheet(ExcelFile ef, string name)
+    {
+      return ef.Worksheets.Add(name);
+    }
+
+    public static ExcelWorksheet GetSheet(ExcelFile ef, string name)
+    {
+      return ef.Worksheets[name];
     }
 
     public static void PutRange(this ExcelWorksheet worksheet, object[,] values, int top = 1, int left = 1)
