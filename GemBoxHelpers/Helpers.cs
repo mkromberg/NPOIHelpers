@@ -116,6 +116,11 @@ namespace ArrayEWE.Helpers
       return ef.Worksheets[name];
     }
 
+    public static ExcelFile Open(string fileName)
+    {
+      return ExcelFile.Load(fileName);
+    }
+
     public static ExcelFile New(string fileName)
     {
       return new ExcelFile();

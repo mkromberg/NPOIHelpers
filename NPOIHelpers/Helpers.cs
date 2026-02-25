@@ -154,6 +154,11 @@ namespace ArrayEWE.Helpers
       return wb.GetSheet(name);
     }
 
+    public static SS.UserModel.IWorkbook Open(string fileName)
+    {
+      return SS.UserModel.WorkbookFactory.Create(fileName);
+    }
+
     public static SS.UserModel.IWorkbook New(string fileName)
     {
       var ext = Path.GetExtension(fileName).ToLowerInvariant();
