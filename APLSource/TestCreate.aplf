@@ -13,7 +13,7 @@
          wb←New'xlsx'
          ai3←⎕AI[3]⊣time⍪←'Create workbook'(⎕AI[3]-ai3)
      :Else
-         wb←Open'c:\tmp\test.xlsx'
+         wb←Open filename
          ai3←⎕AI[3]⊣time⍪←'Reopen workbook'(⎕AI[3]-ai3)
      :EndIf
 
