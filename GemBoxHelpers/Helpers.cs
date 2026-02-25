@@ -116,6 +116,21 @@ namespace ArrayEWE.Helpers
       return ef.Worksheets[name];
     }
 
+    public static ExcelFile Open(string fileName)
+    {
+      return ExcelFile.Load(fileName);
+    }
+
+    public static ExcelFile New(string fileName)
+    {
+      return new ExcelFile();
+    }
+
+    public static void Save(ExcelFile ef, string fileName)
+    {
+      ef.Save(fileName);
+    }
+
     public static void PutRange(this ExcelWorksheet worksheet, object[,] values, int top = 1, int left = 1)
     {
       int rows = values.GetLength(0);
