@@ -1,17 +1,3 @@
- wb←New format;_NET;key
+ wb←New format;_NET
  _NET←Init HELPERLIB
-
- :Select ⎕C HELPERLIB (format~'.')
- :Case 'npoi' 'xlsx'
-      wb←⎕NEW _NET.NPOI.XSSF.UserModel.XSSFWorkbook
- :Case 'npoi' 'xls'
-      wb←⎕NEW _NET.NPOI.HSSF.UserModel.HSSFWorkbook
- :CaseList ('gembox' 'xlsx')('gembox' 'xls')
-      ⍝ key←2 ⎕NQ '.' 'GetEnvironment' 'GEMBOX_LICENSE_KEY'
-      ⍝ _NET.GemBox.Spreadsheet.SpreadsheetInfo.SetLicense ⊂key
-      wb←⎕NEW _NET.GemBox.Spreadsheet.ExcelFile
- :Case 'gembox' 'xls'
-      ... ⍝ wb←⎕NEW _NET.NPOI.HSSF.UserModel.HSSFWorkbook
- :Else
-      ('Unsupported extension: ',format) ⎕SIGNAL 11
- :EndSelect
+ wb←_NET.ArrayEWE.Helpers.WorksheetExtension.New⊂format

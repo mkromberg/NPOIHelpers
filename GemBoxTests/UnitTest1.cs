@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GemBox.Spreadsheet;
 using ArrayEWE.Helpers;
@@ -321,6 +322,32 @@ namespace GemBoxTests
       var ws = WorksheetExtension.GetSheet(ef, "Beta");
       Assert.IsNotNull(ws);
       Assert.AreEqual("Beta", ws.Name);
+    }
+
+    [TestMethod]
+    public void TestNew()
+    {
+      var path = Path.Combine(TestDataGenerator.TestDataPath, "new_test.xlsx");
+      var ef = WorksheetExtension.New(path);
+      Assert.IsNotNull(ef);
+      Assert.IsInstanceOfType(ef, typeof(ExcelFile));
+    }
+
+    [TestMethod]
+    public void TestSave()
+    {
+      var path = Path.Combine(TestDataGenerator.TestDataPath, "save_test.xlsx");
+      var ef = WorksheetExtension.New(path);
+      ef.Worksheets.Add("Test").PutRange(new object[,] { { "Hello", "World" } }, 1, 1);
+      WorksheetExtension.Save(ef, path);
+
+      Assert.IsTrue(File.Exists(path));
+
+      var result = ExcelFile.Load(path).Worksheets[0].GetRange(1, 1, 1, 2);
+      Assert.AreEqual("Hello", result.Values[0, 0]);
+      Assert.AreEqual("World", result.Values[0, 1]);
+
+      File.Delete(path);
     }
 
   }

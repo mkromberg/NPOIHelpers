@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -321,6 +322,35 @@ namespace Tests
       var sheet = WorksheetExtension.GetSheet(wb, "Beta");
       Assert.IsNotNull(sheet);
       Assert.AreEqual("Beta", sheet.SheetName);
+    }
+
+    [TestMethod]
+    public void TestNew()
+    {
+      var path = Path.Combine(TestDataGenerator.TestDataPath, "new_test.xlsx");
+      var wb = WorksheetExtension.New(path);
+      Assert.IsInstanceOfType(wb, typeof(XSSFWorkbook));
+
+      var pathXls = Path.Combine(TestDataGenerator.TestDataPath, "new_test.xls");
+      var wbXls = WorksheetExtension.New(pathXls);
+      Assert.IsInstanceOfType(wbXls, typeof(NPOI.HSSF.UserModel.HSSFWorkbook));
+    }
+
+    [TestMethod]
+    public void TestSave()
+    {
+      var path = Path.Combine(TestDataGenerator.TestDataPath, "save_test.xlsx");
+      var wb = WorksheetExtension.New(path);
+      wb.CreateSheet("Test").PutRange(new object[,] { { "Hello", "World" } }, 1, 1);
+      WorksheetExtension.Save(wb, path);
+
+      Assert.IsTrue(File.Exists(path));
+
+      var result = WorkbookFactory.Create(path).GetSheetAt(0).GetRange(1, 1, 1, 2);
+      Assert.AreEqual("Hello", result.Values[0, 0]);
+      Assert.AreEqual("World", result.Values[0, 1]);
+
+      File.Delete(path);
     }
 
   }

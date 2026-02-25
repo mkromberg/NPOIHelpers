@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using SS = NPOI.SS;
 
 namespace ArrayEWE.Helpers
@@ -151,6 +152,22 @@ namespace ArrayEWE.Helpers
     public static SS.UserModel.ISheet GetSheet(SS.UserModel.IWorkbook wb, string name)
     {
       return wb.GetSheet(name);
+    }
+
+    public static SS.UserModel.IWorkbook New(string fileName)
+    {
+      var ext = Path.GetExtension(fileName).ToLowerInvariant();
+      if (ext == ".xls")
+        return new NPOI.HSSF.UserModel.HSSFWorkbook();
+      return new NPOI.XSSF.UserModel.XSSFWorkbook();
+    }
+
+    public static void Save(SS.UserModel.IWorkbook wb, string fileName)
+    {
+      using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+      {
+        wb.Write(fs);
+      }
     }
 
     public static void PutRange(this SS.UserModel.ISheet sheet, object[,] values, int top = 1, int left = 1)
