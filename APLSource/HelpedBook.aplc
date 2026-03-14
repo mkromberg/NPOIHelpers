@@ -1,0 +1,25 @@
+:Class HelpedBook
+    ⍝ Wraps an NPOI IWorkbook or GemBox ExcelFile and disposes it on destruction.
+    :Field Public Instance WB←⍬
+    :Field Public Instance FileName←''
+
+    ∇ new args
+      :Implements Constructor
+      :Access Public Instance
+      FileName WB←args
+      ⎕DF '[HelpedBook: "',FileName,'"]'
+    ∇
+
+    ∇ Dispose
+      :Access Public Instance
+      :Trap 0
+          WB.Dispose
+      :EndTrap
+    ∇
+
+    ∇ Cleanup
+      :Implements Destructor
+      Dispose
+    ∇
+
+:EndClass

@@ -1,3 +1,4 @@
- wb←New format;_NET
+ wb←New filename;_NET;format
  _NET←Init HELPERLIB
- wb←_NET.ArrayEWE.Helpers.WorksheetExtension.New⊂format
+ format←1↓2⊃⎕NPARTS filename
+ wb←⎕NEW HelpedBook (filename (_NET.ArrayEWE.Helpers.WorksheetExtension.New⊂format))

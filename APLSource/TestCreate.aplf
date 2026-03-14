@@ -10,7 +10,7 @@
 
      :For sheetname :In 'Sheet 1' 'Sheet 2'
          :If sheetname≡'Sheet 1'
-             wb←New'xlsx'
+             wb←New filename
              ai3←⎕AI[3]⊣time⍪←'Create workbook'(⎕AI[3]-ai3)
          :Else
              wb←Open filename
@@ -32,6 +32,7 @@
              ∘∘∘
          :EndIf
          ai3←⎕AI[3]⊣time⍪←('Read ',sheetname)(⎕AI[3]-ai3)
+         wb.Dispose
      :EndFor
      time⍪←('Total for ',filename)(⎕AI[3]-start)
  :EndFor
