@@ -1,0 +1,3 @@
+ ClearHidden sheet;_NET
+ _NET←Init HELPERLIB
+ _NET.ArrayEWE.Helpers.WorksheetExtension.ClearHidden sheet

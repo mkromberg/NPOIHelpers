@@ -1,0 +1,27 @@
+r←GetRange args;sheet;data;topleft;_NET;props;size;t;simple
+ _NET←Init HELPERLIB
+ args←,args
+ (sheet props size topleft)←args,(≢args)↓⎕NULL 'Values' ⍬ ⍬
+ :If simple←1=≡props
+     props←,⊂props
+ :EndIf
+ props←,⊆props
+ :If (⊂⍬)∊size topleft
+     :Trap 90
+         t←(_NET.ArrayEWE.Helpers.WorksheetExtension.GetUsedRangeAddress sheet).(FirstRow FirstColumn LastRow LastColumn)
+     :Else
+         :If 0=≢(_NET.ArrayEWE.Helpers.WorksheetExtension.GetUsedRange sheet).Values
+             →DONE ⊣ r←(⍴props)⍴⊂0 0⍴⊂0
+         :Else
+             ∘∘∘ ⍝ GetRangeAddress failed
+         :EndIf
+     :EndTrap
+     :If topleft≡⍬ ⋄ topleft←1+2↑t ⋄ :EndIf
+     :If size≡⍬ ⋄ ⋄ size←2+(2↓t)-topleft ⋄ :EndIf
+ :EndIf
+ r←(_NET.ArrayEWE.Helpers.WorksheetExtension.GetRange sheet props,topleft,size).Values
+
+ DONE:
+ :If simple
+     r←⊃r
+ :EndIf

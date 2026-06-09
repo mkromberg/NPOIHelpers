@@ -1,0 +1,3 @@
+ Protect wb password;_NET
+ _NET←Init HELPERLIB
+ _NET.ArrayEWE.Helpers.WorksheetExtension.Protect wb.WB password

@@ -1,7 +1,8 @@
-﻿ allsheets←SheetNames wb
+ allsheets←SheetNames wb;n;WB
 
- :If wb.NumberOfSheets>0
-     allsheets←(wb.GetSheetAt¨¯1+⍳wb.NumberOfSheets).SheetName
+ WB←wb.WB
+ :If n←WB.NumberOfSheets>0
+     allsheets←(WB.GetSheetAt¨¯1+⍳n).SheetName
  :Else
      allsheets←0⍴⊂''
  :EndIf

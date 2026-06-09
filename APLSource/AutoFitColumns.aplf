@@ -1,0 +1,4 @@
+ AutoFitColumns(sheet cols);_NET
+ ⍝ AutoFirColums sheet (2 4) = 4 columns starting from #2, or 2-5
+ _NET←Init HELPERLIB
+ _NET.ArrayEWE.Helpers.WorksheetExtension.AutoFitColumns sheet,cols

@@ -1,8 +1,13 @@
 _NET←Init mode;use
+:If 9=⎕NC '_EWE'
+    →0 ⊣ _NET←_EWE
+:EndIf
+
 :If 0=⎕NC 'PATH'
     PATH←{¯1↓1⊃⎕NPARTS ⍵}⍣2⊢4⊃5179⌶⊃⎕SI ⍝ Parent of where this function was loaded from?
     PATH[⍸PATH='/']←'\'
 :EndIf
+
 
 :Select ⎕C mode
 :Case 'npoi'
@@ -15,3 +20,4 @@ _NET←Init mode;use
 
 (_NET←⎕NS'').⎕USING←use
 _NET.ArrayEWE.Helpers.WorksheetExtension.Initialize
+_EWE←_NET

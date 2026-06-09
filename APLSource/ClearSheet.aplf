@@ -1,0 +1,3 @@
+ ClearSheet sheet;_NET
+ _NET←Init HELPERLIB
+ _NET.ArrayEWE.Helpers.WorksheetExtension.ClearSheet sheet

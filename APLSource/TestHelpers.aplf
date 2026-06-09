@@ -1,0 +1,141 @@
+ time←TestHelpers;wb;sheet;data;fmts;r;ai3;start;filename;sheetname;_NET;xlsx;xls;testwb;xl;ws;m
+
+ (xlsx xls testwb)←'c:\tmp\test.xlsx' 'c:\tmp\test.xls' 'c:\tmp\testwb.xlsx'
+
+ HELPERLIB←⎕C ¯7↓2⊃⎕NPARTS{¯1↓⊃⎕NPARTS ⍵}⍣2⊢(4075⌶⍬).Process.InitialDirectory
+ ⎕←'Testing with helper library ',HELPERLIB
+ _NET←Init HELPERLIB
+
+ ⍝ 10000×15 matrix of strings; columns 4-5 get number formats
+ data←{'row ',(⍕⍵[1]),' col ',(⍕⍵[2])}¨⍳10000 15
+ fmts←10000 15⍴⎕NULL
+ fmts[;4]←⊂'#,##0.00'
+ fmts[;5]←⊂'0.00%'
+
+ time←0 2⍴⊂''
+
+ ⍝ Basic performance tests
+ :For filename :In xlsx xls
+     start←ai3←⎕AI[3]
+
+     :For sheetname :In 'Sheet 1' 'Sheet 2'
+         :If sheetname≡'Sheet 1'
+             wb←New filename
+             ai3←⎕AI[3]⊣time⍪←'Create workbook'(⎕AI[3]-ai3)
+         :Else
+             wb←Open filename
+             ai3←⎕AI[3]⊣time⍪←'Reopen workbook'(⎕AI[3]-ai3)
+         :EndIf
+
+         sheet←AddSheet wb sheetname
+         ai3←⎕AI[3]⊣time⍪←('Add ',sheetname)(⎕AI[3]-ai3)
+
+         ⍝ PutRange using named properties: Values + NumberFormat
+         PutRange sheet data
+         ai3←⎕AI[3]⊣time⍪←('PutRange to ',sheetname)(⎕AI[3]-ai3)
+
+         filename Save wb
+         ai3←⎕AI[3]⊣time⍪←'Save wb'(⎕AI[3]-ai3)
+
+         ⍝ GetRange: read Values only
+         r←GetRange sheet
+         ai3←⎕AI[3]⊣time⍪←('GetRange Values only from ',sheetname)(⎕AI[3]-ai3)
+         :If r≢data
+             ⎕←'FAIL: Values mismatch (',sheetname,')'
+         :EndIf
+
+         wb.Dispose
+     :EndFor
+     time⍪←('Total for ',filename)(⎕AI[3]-start)
+
+     ⍝ Now test extended functionality
+
+     wb←Open filename
+     ⍝ GetRange: read Values + NumberFormat, verify format round-trip
+     PutRange sheet(data fmts)('Values' 'NumberFormat')
+     r←GetRange sheet('Values' 'NumberFormat')
+     ai3←⎕AI[3]⊣time⍪←('GetRange Values+NumberFormat from ',sheetname)(⎕AI[3]-ai3)
+
+     :If r≢data fmts
+         ⎕←'FAIL: Values mismatch with formats (',sheetname,')'
+         ∘∘∘
+     :EndIf
+     :If '#,##0.00'≢⊃(2⊃r)[10000;4]   ⍝ last row, column 4
+         ⎕←'FAIL: NumberFormat mismatch (',sheetname,')'
+     :EndIf
+
+         ⍝ Test appending
+     PutRange sheet(10↑¨data fmts)('Values' 'NumberFormat')'append'
+     ai3←⎕AI[3]⊣time⍪←('Append 10 rows to ',sheetname)(⎕AI[3]-ai3)
+     r←GetRange sheet('Values' 'NumberFormat')
+     :If r≢data fmts⍪¨10↑¨data fmts
+         ⎕←'FAIL: Values mismatch after append (',sheetname,')'
+         ...
+     :EndIf
+
+         ⍝ Names order: request in reverse order, verify result follows request
+     r←GetRange sheet('NumberFormat' 'Values')(3 4)
+     :If (3 4∘↑¨fmts data)≢r
+         ⎕←'FAIL: Data incorrect when order of properties is reversed'
+     :EndIf
+
+         ⍝ GetRange unknown property must throw
+     :Trap 90
+         r←GetRange sheet('Values' 'Bogus')
+         ⎕←'FAIL: Unknown GetRange property should throw error'
+     :Else
+         :If ~∨/'Unknown property'⍷⎕EXCEPTION.Message
+             ⎕←'FAIL: - Unexpected exception validating unknown GetRange property: ',⎕EXCEPTION.Message
+         :EndIf
+     :EndTrap
+
+         ⍝ PutRange unknown property must throw
+
+     :Trap 90
+         PutRange sheet(3 3⍴⊂'blah')'Bogus'
+         ⎕←'FAIL: Unknown PutRange property should throw error'
+     :Else
+         :If ~∨/'does not support'⍷⎕EXCEPTION.Message
+             ⎕←'FAIL: - Unexpected exception validating unknown GetRange property: ',⎕EXCEPTION.Message
+         :EndIf
+     :EndTrap
+
+
+ :EndFor
+
+⍝ Now test ability to decrypt, unprotect, and clear hidden bits
+⍝ Make a password-protected workbook with hidden rows & cols
+ MakeTestWB testwb'secret' 'protect'
+ wb←'secret'Open testwb
+ sheet←GetSheet wb'TestData'
+ ClearHidden sheet
+
+ ClearSheet sheet
+ r←GetRange sheet
+ :If 0 0≢⍴r
+     ⎕←'FAIL: ChearSheet did not clear the sheet'
+ :EndIf
+
+ PutRange sheet(1 3⍴'Narrow'(100⍴'Wide')'Narrow')
+ AutoFitColumns sheet(1 3)
+ testwb Save wb
+
+ 'xl'⎕WC'OLEClient' 'Excel.Application'
+ xl.(Visible DisplayAlerts)←1
+
+ wb←xl.Workbooks.Open⊂testwb
+ ws←wb.ActiveSheet
+ :If ∨/m←ws.Columns[⍳10].Hidden
+     ⎕←'FAIL: Columns remain hidden: ',⍕⍸m
+ :EndIf
+ :If 1=≢∪m←ws.Columns[1 2 3].Width
+     ⎕←'FAIL: AutoWidth failed, widths are: ',⍕m
+ :EndIf
+
+ {}ws.Columns[1 2 3].AutoFit ⍝ Excel re-fits
+ :If 0.1∨.<(|ws.Columns[1 2 3].Width-m)÷m
+     ⎕←'WARNING: Excel and NPOI autofit differ by more than 10%'
+ :EndIf
+
+ wb.Close 0
+ xl.Quit

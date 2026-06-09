@@ -1,4 +1,17 @@
-PutRange args;sheet;data;topleft;_NET
-(sheet data topleft)←3↑args,⊂1 1
-_NET←Init HELPERLIB
-_NET.ArrayEWE.Helpers.WorksheetExtension.PutRange sheet data,topleft
+ PutRange args;sheet;values;_NET;topleft;names;i
+ ⍝ args: sheet data                               → Values only, top=1 left=1
+ ⍝ args: sheet (data fmts...) ('Values' 'NumberFormat' ...) topleft → named-property write, top=1 left=1
+ _NET←Init HELPERLIB
+ args←,args
+ (sheet values names topleft)←4↑args,(≢args)↓⎕NULL (0 0⍴0) 'Values' (1 1)
+ :If 'append'≡topleft
+     topleft←2 1+(_NET.ArrayEWE.Helpers.WorksheetExtension.GetUsedRangeAddress sheet).(LastRow FirstColumn)
+ :EndIf
+
+ :If IsChar names ⍝ Single simple prop name is allowed
+     (names values)←,∘⊂¨names values
+ :EndIf
+
+ :For i :In ⍳≢names
+     _NET.ArrayEWE.Helpers.WorksheetExtension.PutRange sheet (i⊃names) (i⊃values), topleft
+ :EndFor

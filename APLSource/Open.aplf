@@ -1,3 +1,5 @@
- wb←Open file;_NET
+ r←{password}Open file;_NET;wb
  _NET←Init HELPERLIB
- wb←⎕NEW HelpedBook (file (_NET.ArrayEWE.Helpers.WorksheetExtension.Open⊂file))
+ password←⎕VGET ⊂'password' ''
+ wb←_NET.ArrayEWE.Helpers.WorksheetExtension.Open file password
+ r←⎕NEW HelpedBook (file wb)

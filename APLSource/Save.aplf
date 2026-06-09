@@ -1,3 +1,5 @@
- filename Save wb;_NET
+ filename Save args;_NET;wb;password
  _NET←Init HELPERLIB
- _NET.ArrayEWE.Helpers.WorksheetExtension.Save wb.WB filename
+ args←,args
+ (wb password)←2↑args,(≢args)↓⎕NULL ''
+ _NET.ArrayEWE.Helpers.WorksheetExtension.Save wb.WB filename password

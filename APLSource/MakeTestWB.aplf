@@ -1,0 +1,27 @@
+ MakeTestWB (filename password protect);xl;wb;ws;r;c;fmt;data
+ ⍝ Create an Excel test workbook with hidden rows and columns via COM.
+ ⍝ filename: path to save; extension determines format (.xlsx or .xls)
+ ⍝ password (optional left arg): open password to protect the workbook
+
+ ⍝ Determine Excel file format from extension
+ ⍝ xlOpenXMLWorkbook (.xlsx) / xlWorkbookNormal (.xls)
+ fmt←(51 ¯4143 0)['.xlsx' '.xls' ⍳ ⎕C 3⌷⎕NPARTS filename]
+ 'Filename extension must be .xls or .xlsx' ⎕SIGNAL (fmt=0)/11
+
+ 'xl' ⎕WC 'OLEClient' 'Excel.Application'
+ xl.(Visible DisplayAlerts)←0
+
+ wb←xl.Workbooks.Add ⍬
+ ws←wb.ActiveSheet
+ ws.Name←'TestData'
+
+ ⍝ Fill 20×10 grid with labelled values
+ data←{'R',(⍕⍵[1]),' C',(⍕⍵[2])}¨⍳20 10
+ ws.Range[⊂'A1:J20'].Value2←data
+
+ ⍝ ws.(Rows[3 7 12],Columns[2 5]).Hidden←1 ⍝ Hide some rows and columns
+⍝ wb.Protect protect 1 1 ⍝ Password, Structure and Windows
+ wb.SaveAs filename fmt,(0≠≢password)/⊂password
+
+ wb.Close 0
+ xl.Quit

@@ -1,3 +1,5 @@
-sheet←AddSheet (wb name);_NET
+sheet←AddSheet args;_NET;wb;name;first
+args←,args
+(wb name first)←3↑args,(≢args)↓⎕NULL '' 0
 _NET←Init HELPERLIB
-sheet←_NET.ArrayEWE.Helpers.WorksheetExtension.AddSheet wb.WB name
+sheet←_NET.ArrayEWE.Helpers.WorksheetExtension.AddSheet wb.WB name first
