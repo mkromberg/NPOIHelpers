@@ -1,4 +1,4 @@
- time←TestHelpers;wb;sheet;data;fmts;r;ai3;start;filename;sheetname;_NET;xlsx;xls;testwb;xl;ws;m
+ time←TestHelpers;wb;sheet;data;fmts;r;ai3;start;filename;sheetname;_NET;xlsx;xls;testwb;xl;ws;m;t;protect;xlwb
 
  (xlsx xls testwb)←'c:\tmp\test.xlsx' 'c:\tmp\test.xls' 'c:\tmp\testwb.xlsx'
 
@@ -51,6 +51,10 @@
      ⍝ Now test extended functionality
 
      wb←Open filename
+     sheet←AddSheet wb 'First' 1 ⍝ Add worksheet to front
+     :If 'First' 'Sheet 1' 'Sheet 2'≢SheetNames wb
+         ⎕←'FAIL: Adding worksheet in 1st postion failed'
+     :EndIf
      ⍝ GetRange: read Values + NumberFormat, verify format round-trip
      PutRange sheet(data fmts)('Values' 'NumberFormat')
      r←GetRange sheet('Values' 'NumberFormat')
@@ -99,13 +103,12 @@
              ⎕←'FAIL: - Unexpected exception validating unknown GetRange property: ',⎕EXCEPTION.Message
          :EndIf
      :EndTrap
-
-
  :EndFor
 
 ⍝ Now test ability to decrypt, unprotect, and clear hidden bits
 ⍝ Make a password-protected workbook with hidden rows & cols
- MakeTestWB testwb'secret' 'protect'
+
+ MakeTestWB testwb 'secret' (protect←'protect') ⍝ encryp with password 'secret' and protect with 'protect'
  wb←'secret'Open testwb
  sheet←GetSheet wb'TestData'
  ClearHidden sheet
@@ -123,19 +126,27 @@
  'xl'⎕WC'OLEClient' 'Excel.Application'
  xl.(Visible DisplayAlerts)←1
 
- wb←xl.Workbooks.Open⊂testwb
- ws←wb.ActiveSheet
+ xlwb←xl.Workbooks.Open⊂testwb
+ ws←xlwb.ActiveSheet
  :If ∨/m←ws.Columns[⍳10].Hidden
      ⎕←'FAIL: Columns remain hidden: ',⍕⍸m
  :EndIf
- :If 1=≢∪m←ws.Columns[1 2 3].Width
+
+ :Trap 11
+      {}ws.Columns[1 2 3].AutoFit ⍝ Excel re-fits
+      ⎕←'FAIL: Worksheet is not protected'
+ :Else
+      ws.Unprotect ⊂protect
+ :EndTrap
+
+ UnprotectSheet sheet
+ :If 1=≢∪m←GetColumnWidths sheet (1 3)
      ⎕←'FAIL: AutoWidth failed, widths are: ',⍕m
  :EndIf
-
  {}ws.Columns[1 2 3].AutoFit ⍝ Excel re-fits
- :If 0.1∨.<(|ws.Columns[1 2 3].Width-m)÷m
-     ⎕←'WARNING: Excel and NPOI autofit differ by more than 10%'
+ :If 0.1∨.<t←(|ws.Columns[1 2 3].Width-m)÷m
+     ⎕←'WARNING: Excel and NPOI autofit differ by more than 10% (',(1↓1⍕100×⌈/t),'%)'
  :EndIf
 
- wb.Close 0
+ xlwb.Close 0
  xl.Quit

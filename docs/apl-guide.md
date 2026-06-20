@@ -187,6 +187,14 @@ H.Save wb 'C:\data\secret.xlsx' 'password'   ⍝ save with file-level encryption
 ⍝ protect / unprotect workbook structure (prevents sheet add/delete/rename)
 H.Protect wb 'password'   ⍝ protect
 H.Protect wb ''           ⍝ unprotect
+
+⍝ protect / unprotect an individual sheet (prevents cell edits, row/col changes, etc.)
+H.ProtectSheet sheet 'password'   ⍝ protect
+H.ProtectSheet sheet ''           ⍝ unprotect
+
+⍝ read column widths (in Excel character-width units, same as Format > Column Width)
+widths ← H.GetColumnWidths sheet 1 2147483647   ⍝ all columns in used range
+widths ← H.GetColumnWidths sheet 2 4            ⍝ columns 2–5 only
 ```
 
 ---
@@ -230,3 +238,5 @@ H.Save wb 'C:\data\output.xlsx' ''
 - Dyalog APL does not resolve extension methods on instance objects: all `ISheet` methods (`GetRange`, `PutRange`, `GetUsedRange`, `ClearSheet`, etc.) must be called via `H.MethodName sheet ...`.
 - Dyalog APL does not apply C# default parameter values: all parameters must be supplied explicitly. Use `2147483647` (`int.MaxValue`) where the C# default means "unbounded". Pass `''` where the C# default is `null` (e.g. the `password` arguments to `Open`, `Save`, and `Protect`).
 - `Protect` controls workbook *structure* protection (prevents adding, deleting, or renaming sheets) — it is separate from file-level encryption set via the `password` argument to `Save`.
+- `GetColumnWidths` returns a `Double[]` of column widths in points, matching Excel's `Column.Width` COM property. For unset columns it returns the sheet's default column width. On an empty sheet (no rows) it returns an empty array.
+- `ProtectSheet` controls sheet-level protection (prevents cell edits, row/column insertion, formatting changes, etc.) — it is independent of both workbook structure protection and file encryption. Pass `''` to remove sheet protection.

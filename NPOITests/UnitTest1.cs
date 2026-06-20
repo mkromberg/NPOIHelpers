@@ -626,5 +626,130 @@ namespace Tests
         sheet.PutRange("Unknown", new object[,] { { 1.0 } }, 1, 1));
     }
 
+    static double ExpectedPoints(ISheet sheet, int col) =>
+      (sheet.GetColumnWidthInPixels(col) + 5.0) * 0.75;
+
+    [TestMethod]
+    public void TestGetColumnWidthsDefault()
+    {
+      var wb = new XSSFWorkbook();
+      var sheet = wb.CreateSheet("Test");
+      PutValues(sheet, new object[,] { { "A", "B", "C" } }, 1, 1);
+
+      var widths = sheet.GetColumnWidths();
+      Assert.AreEqual(3, widths.Length);
+      for (int c = 0; c < 3; c++)
+        Assert.AreEqual(ExpectedPoints(sheet, c), widths[c], 0.01);
+    }
+
+    [TestMethod]
+    public void TestGetColumnWidthsExplicit()
+    {
+      var wb = new XSSFWorkbook();
+      var sheet = wb.CreateSheet("Test");
+      PutValues(sheet, new object[,] { { "A", "B", "C" } }, 1, 1);
+      sheet.SetColumnWidth(0, (int)(10.0 * 256));
+      sheet.SetColumnWidth(1, (int)(20.0 * 256));
+
+      var widths = sheet.GetColumnWidths();
+      Assert.AreEqual(3, widths.Length);
+      Assert.AreEqual(ExpectedPoints(sheet, 0), widths[0], 0.01);
+      Assert.AreEqual(ExpectedPoints(sheet, 1), widths[1], 0.01);
+      // Wider column should produce larger point value
+      Assert.IsTrue(widths[1] > widths[0]);
+    }
+
+    [TestMethod]
+    public void TestGetColumnWidthsRange()
+    {
+      var wb = new XSSFWorkbook();
+      var sheet = wb.CreateSheet("Test");
+      PutValues(sheet, new object[,] { { "A", "B", "C", "D", "E" } }, 1, 1);
+      sheet.SetColumnWidth(1, (int)(15.0 * 256));
+      sheet.SetColumnWidth(2, (int)(25.0 * 256));
+
+      var widths = sheet.GetColumnWidths(left: 2, cols: 2);
+      Assert.AreEqual(2, widths.Length);
+      Assert.AreEqual(ExpectedPoints(sheet, 1), widths[0], 0.01);
+      Assert.AreEqual(ExpectedPoints(sheet, 2), widths[1], 0.01);
+    }
+
+    [TestMethod]
+    public void TestGetColumnWidthsEmptySheet()
+    {
+      var wb = new XSSFWorkbook();
+      var sheet = wb.CreateSheet("Test");
+      var widths = sheet.GetColumnWidths();
+      Assert.AreEqual(0, widths.Length);
+    }
+
+    [TestMethod]
+    public void TestProtectWorkbook()
+    {
+      var wb = new XSSFWorkbook();
+      wb.CreateSheet("Sheet1");
+      Assert.IsFalse(wb.IsStructureLocked());
+      WorksheetExtension.Protect(wb, "secret");
+      Assert.IsTrue(wb.IsStructureLocked());
+      WorksheetExtension.Protect(wb, null);
+      Assert.IsFalse(wb.IsStructureLocked());
+    }
+
+    [TestMethod]
+    public void TestProtectWorkbookPasswordHashSet()
+    {
+      var wb = new XSSFWorkbook();
+      wb.CreateSheet("Sheet1");
+      WorksheetExtension.Protect(wb, "test");
+      var prot = wb.GetCTWorkbook().workbookProtection;
+      Assert.IsNotNull(prot);
+      Assert.IsTrue(prot.lockStructure);
+      Assert.IsNotNull(prot.workbookPassword);
+      Assert.AreEqual(2, prot.workbookPassword.Length);
+    }
+
+    [TestMethod]
+    public void TestProtectWorkbookRoundTrip()
+    {
+      var path = Path.Combine(TestDataGenerator.TestDataPath, "protect_wb_test.xlsx");
+      var wb = new XSSFWorkbook();
+      wb.CreateSheet("Sheet1");
+      WorksheetExtension.Protect(wb, "secret");
+      WorksheetExtension.Save(wb, path);
+
+      var wb2 = (XSSFWorkbook)WorksheetExtension.Open(path);
+      Assert.IsTrue(wb2.IsStructureLocked());
+
+      File.Delete(path);
+    }
+
+    [TestMethod]
+    public void TestProtectSheet()
+    {
+      var wb = new XSSFWorkbook();
+      var sheet = wb.CreateSheet("Sheet1");
+      Assert.IsFalse(sheet.Protect);
+      WorksheetExtension.ProtectSheet(sheet, "secret");
+      Assert.IsTrue(sheet.Protect);
+      WorksheetExtension.ProtectSheet(sheet, null);
+      Assert.IsFalse(sheet.Protect);
+    }
+
+    [TestMethod]
+    public void TestProtectSheetRoundTrip()
+    {
+      var path = Path.Combine(TestDataGenerator.TestDataPath, "protect_sheet_test.xlsx");
+      var wb = new XSSFWorkbook();
+      var sheet = wb.CreateSheet("Sheet1");
+      PutValues(sheet, new object[,] { { "Protected data" } }, 1, 1);
+      WorksheetExtension.ProtectSheet(sheet, "secret");
+      WorksheetExtension.Save(wb, path);
+
+      var wb2 = WorksheetExtension.Open(path);
+      Assert.IsTrue(wb2.GetSheetAt(0).Protect);
+
+      File.Delete(path);
+    }
+
   }
 }

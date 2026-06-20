@@ -1,0 +1,4 @@
+ UnprotectSheet sheet;_NET
+ ⍝ Unprotect a sheet
+ _NET←Init HELPERLIB
+ _NET.ArrayEWE.Helpers.WorksheetExtension.ProtectSheet sheet''

@@ -1,0 +1,4 @@
+r←GetColumnWidths(sheet cols);_NET
+ ⍝ GetColumnWidths sheet (startcol numcols)
+ _NET←Init HELPERLIB
+ r←_NET.ArrayEWE.Helpers.WorksheetExtension.GetColumnWidths sheet,cols

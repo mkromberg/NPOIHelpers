@@ -229,10 +229,40 @@ namespace ArrayEWE.Helpers
       else if (wb is NPOI.XSSF.UserModel.XSSFWorkbook xssf)
       {
         if (string.IsNullOrEmpty(password))
+        {
           xssf.UnlockStructure();
+        }
         else
+        {
           xssf.LockStructure();
+          var prot = xssf.GetCTWorkbook().workbookProtection;
+          if (prot != null)
+            prot.workbookPassword = ExcelPasswordHash(password);
+        }
       }
+    }
+
+    public static void ProtectSheet(SS.UserModel.ISheet sheet, string password)
+    {
+      sheet.ProtectSheet(string.IsNullOrEmpty(password) ? null : password);
+    }
+
+    // Legacy XOR hash from ECMA-376 §4.3.1 / MS-OFFCRYPTO §2.3.7.4.
+    // Produces a 2-byte big-endian result stored in the workbookPassword hexBinary attribute.
+    private static byte[] ExcelPasswordHash(string password)
+    {
+      byte[] chars = System.Text.Encoding.GetEncoding(1252).GetBytes(password);
+      int hash = 0;
+      for (int i = chars.Length - 1; i >= 0; i--)
+      {
+        hash = ((hash >> 1) & 0x3FFF) | ((hash & 1) << 14);
+        hash ^= chars[i];
+        hash &= 0x7FFF;
+      }
+      hash = ((hash >> 1) & 0x3FFF) | ((hash & 1) << 14);
+      hash ^= chars.Length;
+      hash ^= 0xCE4B;
+      return new byte[] { (byte)((hash >> 8) & 0xFF), (byte)(hash & 0xFF) };
     }
 
     public static SS.UserModel.IWorkbook New(string fileName)
@@ -314,6 +344,25 @@ namespace ArrayEWE.Helpers
         sheet.SetColumnHidden(c, false);
         sheet.SetColumnWidth(c, sheet.DefaultColumnWidth * 256);
       }
+    }
+
+    public static double[] GetColumnWidths(this SS.UserModel.ISheet sheet, int left = 1, int cols = int.MaxValue)
+    {
+      if (sheet.PhysicalNumberOfRows == 0 && cols == int.MaxValue)
+        return Array.Empty<double>();
+
+      int startCol = left - 1;
+      int endCol = cols == int.MaxValue
+        ? sheet.GetUsedRangeAddress().LastColumn
+        : startCol + cols - 1;
+
+      int count = endCol - startCol + 1;
+      var widths = new double[count];
+      for (int c = startCol; c <= endCol; c++)
+        // GetColumnWidthInPixels returns character pixels (no margin).
+        // +5 adds Excel's standard 5px per-column margin; ×0.75 converts 96dpi px → points.
+        widths[c - startCol] = (sheet.GetColumnWidthInPixels(c) + 5.0) * 0.75;
+      return widths;
     }
 
     public static void AutoFitColumns(this SS.UserModel.ISheet sheet, int left = 1, int cols = int.MaxValue)

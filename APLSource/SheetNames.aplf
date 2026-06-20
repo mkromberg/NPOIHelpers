@@ -1,7 +1,8 @@
  allsheets←SheetNames wb;n;WB
+ ⍝ Return names of all sheets in workbook
 
  WB←wb.WB
- :If n←WB.NumberOfSheets>0
+ :If 0<n←WB.NumberOfSheets
      allsheets←(WB.GetSheetAt¨¯1+⍳n).SheetName
  :Else
      allsheets←0⍴⊂''

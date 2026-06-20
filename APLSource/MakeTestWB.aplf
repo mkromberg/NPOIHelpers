@@ -19,8 +19,11 @@
  data←{'R',(⍕⍵[1]),' C',(⍕⍵[2])}¨⍳20 10
  ws.Range[⊂'A1:J20'].Value2←data
 
- ⍝ ws.(Rows[3 7 12],Columns[2 5]).Hidden←1 ⍝ Hide some rows and columns
-⍝ wb.Protect protect 1 1 ⍝ Password, Structure and Windows
+ ws.(Rows[3 7 12],Columns[2 5]).Hidden←1 ⍝ Hide some rows and columns
+
+ 2 ⎕NQ wb'setMethodInfo' 'Protect' ('VT_VOID' 'VT_VARIANT' 'VT_BOOL' 'VT_BOOL') ⍝ Otherwise next line gives DOMAIN ERROR
+ wb.Protect protect 1 1 ⍝ Protect Sheet Structure (Password, Structure and Windows flags)
+ ws.Protect protect('UserInterfaceOnly' 1) ⍝      Also Protect the sheet
  wb.SaveAs filename fmt,(0≠≢password)/⊂password
 
  wb.Close 0

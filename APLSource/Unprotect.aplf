@@ -1,0 +1,4 @@
+ Unprotect book;_NET
+ ⍝ Unprotect a workbook
+ _NET←Init HELPERLIB
+ _NET.ArrayEWE.Helpers.WorksheetExtension.Protect book ''
