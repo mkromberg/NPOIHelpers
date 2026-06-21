@@ -188,7 +188,12 @@ namespace ArrayEWE.Helpers
 
     public static SS.UserModel.ISheet GetSheet(SS.UserModel.IWorkbook wb, string name)
     {
-      return wb.GetSheet(name);
+      var sheet = wb.GetSheet(name);
+      if (sheet != null) return sheet;
+      for (int i = 0; i < wb.NumberOfSheets; i++)
+        if (string.Equals(wb.GetSheetName(i), name, StringComparison.OrdinalIgnoreCase))
+          return wb.GetSheetAt(i);
+      return null;
     }
 
     public static SS.UserModel.IWorkbook Open(string fileName, string password = null)

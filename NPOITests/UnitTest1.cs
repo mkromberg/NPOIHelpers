@@ -330,6 +330,17 @@ namespace Tests
     }
 
     [TestMethod]
+    public void TestGetSheetCaseInsensitive()
+    {
+      var wb = new XSSFWorkbook();
+      wb.CreateSheet("Alpha");
+      wb.CreateSheet("Beta");
+      Assert.AreEqual("Alpha", WorksheetExtension.GetSheet(wb, "alpha").SheetName);
+      Assert.AreEqual("Beta",  WorksheetExtension.GetSheet(wb, "BETA").SheetName);
+      Assert.IsNull(WorksheetExtension.GetSheet(wb, "Gamma"));
+    }
+
+    [TestMethod]
     public void TestNew()
     {
       var path = Path.Combine(TestDataGenerator.TestDataPath, "new_test.xlsx");
